@@ -18,7 +18,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('admin.comics.index') }}" class="nav-link {{ request()->routeIs('admin.comics.*') ? 'active' : '' }}">
                             <i class="fa fa-book"></i>
                             <span>Sản phẩm</span>
                         </a>

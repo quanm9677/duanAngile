@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\Admin\ComicController;
 
 // Client routes
 Route::get('/', function () {
@@ -18,6 +19,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     
     // Categories
     Route::resource('categories', CategoryController::class);
+    Route::resource('comics', ComicController::class);
 });
 
 // Thêm route group cho admin

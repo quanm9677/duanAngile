@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Comic;
 use App\Models\Category;
 use App\Models\Author;
@@ -12,16 +13,17 @@ class ComicController extends Controller
     // Hiển thị danh sách sản phẩm
     public function index()
     {
-        $comics = Comic::with(['author', 'category'])->get();
-        return view('comics.index', compact('comics'));
+        $comics = Comic::all();
+        return view('admin.comics.index', compact('comics'));
     }
 
     // Hiển thị form tạo sản phẩm mới
     public function create()
     {
         $categories = Category::all();
-        $authors = Author::all();
-        return view('comics.create', compact('categories', 'authors'));
+        // Xóa dòng này nếu không cần danh sách tác giả
+        // $authors = Author::all();
+        return view('admin.comics.create', compact('categories')); // Chỉ truyền $categories
     }
 
     // Lưu sản phẩm mới
@@ -29,7 +31,8 @@ class ComicController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'author_id' => 'nullable|exists:authors,id',
+            // Xóa dòng này nếu không cần tác giả
+            // 'author_id' => 'nullable|exists:authors,id',
             'category_id' => 'nullable|exists:categories,id',
             'description' => 'nullable|string',
             'publication_date' => 'nullable|date',
@@ -39,22 +42,24 @@ class ComicController extends Controller
             'image' => 'nullable|string',
         ]);
 
+        // Tạo sản phẩm mới
         Comic::create($request->all());
-        return redirect()->route('comics.index')->with('success', 'Sản phẩm đã được tạo thành công.');
+        return redirect()->route('admin.comics.index')->with('success', 'Sản phẩm đã được tạo thành công.');
     }
 
     // Hiển thị chi tiết sản phẩm
     public function show(Comic $comic)
     {
-        return view('comics.show', compact('comic'));
+        return view('admin.comics.show', compact('comic'));
     }
 
     // Hiển thị form chỉnh sửa sản phẩm
     public function edit(Comic $comic)
     {
         $categories = Category::all();
-        $authors = Author::all();
-        return view('comics.edit', compact('comic', 'categories', 'authors'));
+        // Xóa dòng này nếu không cần danh sách tác giả
+        // $authors = Author::all();
+        return view('admin.comics.edit', compact('comic', 'categories')); // Chỉ truyền $categories
     }
 
     // Cập nhật sản phẩm
@@ -62,7 +67,8 @@ class ComicController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'author_id' => 'nullable|exists:authors,id',
+            // Xóa dòng này nếu không cần tác giả
+            // 'author_id' => 'nullable|exists:authors,id',
             'category_id' => 'nullable|exists:categories,id',
             'description' => 'nullable|string',
             'publication_date' => 'nullable|date',
@@ -72,14 +78,15 @@ class ComicController extends Controller
             'image' => 'nullable|string',
         ]);
 
+        // Cập nhật sản phẩm
         $comic->update($request->all());
-        return redirect()->route('comics.index')->with('success', 'Sản phẩm đã được cập nhật thành công.');
+        return redirect()->route('admin.comics.index')->with('success', 'Sản phẩm đã được cập nhật thành công.');
     }
 
     // Xóa sản phẩm
     public function destroy(Comic $comic)
     {
         $comic->delete();
-        return redirect()->route('comics.index')->with('success', 'Sản phẩm đã được xóa thành công.');
+        return redirect()->route('admin.comics.index')->with('success', 'Sản phẩm đã được xóa thành công.');
     }
 }

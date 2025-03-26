@@ -1,18 +1,19 @@
-@extends('layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
 <div class="container">
-    <h1>Chi tiết Sản phẩm</h1>
-    <p><strong>ID:</strong> {{ $comic->id }}</p>
-    <p><strong>Tên:</strong> {{ $comic->title }}</p>
-    <p><strong>Tác giả:</strong> {{ $comic->author->name ?? 'Chưa có' }}</p>
-    <p><strong>Danh mục:</strong> {{ $comic->category->name ?? 'Chưa có' }}</p>
-    <p><strong>Mô tả:</strong> {{ $comic->description }}</p>
-    <p><strong>Ngày phát hành:</strong> {{ $comic->publication_date }}</p>
-    <p><strong>Giá:</strong> {{ number_format($comic->price, 2) }} VNĐ</p>
-    <p><strong>Giá gốc:</strong> {{ number_format($comic->original_price, 2) }} VNĐ</p>
-    <p><strong>Số lượng tồn kho:</strong> {{ $comic->stock_quantity }}</p>
-    <p><strong>Hình ảnh:</strong> <img src="{{ asset($comic->image) }}" alt="{{ $comic->title }}" width="100"></p>
-    <a href="{{ route('comics.index') }}" class="btn btn-primary">Quay lại</a>
+    <h1>Chi Tiết Sản Phẩm: {{ $comic->title }}</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ $comic->title }}</h5>
+            <p class="card-text"><strong>Danh Mục:</strong> {{ $comic->category->name ?? 'N/A' }}</p>
+            <p class="card-text"><strong>Mô Tả:</strong> {{ $comic->description }}</p>
+            <p class="card-text"><strong>Ngày Xuất Bản:</strong> {{ $comic->publication_date }}</p>
+            <p class="card-text"><strong>Giá:</strong> {{ $comic->price }}</p>
+            <p class="card-text"><strong>Số Lượng Tồn Kho:</strong> {{ $comic->stock_quantity }}</p>
+            <img src="{{ asset($comic->image) }}" alt="{{ $comic->title }}" class="img-fluid">
+        </div>
+    </div>
+    <a href="{{ route('admin.comics.index') }}" class="btn btn-secondary mt-3">Quay lại</a>
 </div>
 @endsection
