@@ -34,9 +34,14 @@ class ComicController extends Controller
             'category_id' => 'nullable|exists:categories,id', // Danh mục phải tồn tại
             'description' => 'nullable|string', // Mô tả có thể null
             'publication_date' => 'nullable|date', // Ngày xuất bản phải là định dạng ngày
-            'price' => 'nullable|numeric|lt:original_price', // Giá phải nhỏ hơn giá gốc
+            'price' => 'nullable|numeric|gt:0|lt:original_price', // Giá phải lớn hơn 0 và nhỏ hơn giá gốc
             'original_price' => 'required|numeric', // Giá gốc là bắt buộc và phải là số
             'stock_quantity' => 'nullable|integer|min:1', // Số lượng tồn kho phải lớn hơn hoặc bằng 1
+        ], [
+            'title.required' => 'Không được để trống tên.', // Tùy chỉnh thông báo lỗi
+            'title.max' => 'Tiêu đề không được vượt quá 255 ký tự.', // Tùy chỉnh thông báo lỗi cho độ dài tiêu đề
+            'price.gt' => 'Giá sản phẩm phải lớn hơn 0.', // Tùy chỉnh thông báo lỗi cho trường giá
+            'price.lt' => 'Giá phải nhỏ hơn giá gốc.', // Tùy chỉnh thông báo lỗi cho trường giá
         ]);
 
         try {
@@ -63,9 +68,14 @@ class ComicController extends Controller
             'category_id' => 'nullable|exists:categories,id', // Danh mục phải tồn tại
             'description' => 'nullable|string', // Mô tả có thể null
             'publication_date' => 'nullable|date', // Ngày xuất bản phải là định dạng ngày
-            'price' => 'nullable|numeric|lt:original_price', // Giá phải nhỏ hơn giá gốc
+            'price' => 'nullable|numeric|gt:0|lt:original_price', // Giá phải lớn hơn 0 và nhỏ hơn giá gốc
             'original_price' => 'required|numeric', // Giá gốc là bắt buộc và phải là số
             'stock_quantity' => 'nullable|integer|min:1', // Số lượng tồn kho phải lớn hơn hoặc bằng 1
+        ], [
+            'title.required' => 'Không được để trống tên.', // Tùy chỉnh thông báo lỗi
+            'title.max' => 'Tiêu đề không được vượt quá 255 ký tự.', // Tùy chỉnh thông báo lỗi cho độ dài tiêu đề
+            'price.gt' => 'Giá sản phẩm phải lớn hơn 0.', // Tùy chỉnh thông báo lỗi cho trường giá
+            'price.lt' => 'Giá phải nhỏ hơn giá gốc.', // Tùy chỉnh thông báo lỗi cho trường giá
         ]);
 
         try {
