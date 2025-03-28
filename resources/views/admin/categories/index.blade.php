@@ -9,6 +9,19 @@
         </a>
     </div>
 
+    <!-- Thông báo thành công hoặc lỗi -->
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="card shadow-sm">
         <div class="card-body">
             <table class="table table-hover">
@@ -48,4 +61,4 @@
         </div>
     </div>
 </div>
-@endsection
+@endsection 

@@ -9,6 +9,18 @@
         </a>
     </div>
 
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="card shadow-sm">
         <div class="card-body">
             <table class="table table-hover">
@@ -33,10 +45,10 @@
                             <a href="{{ route('admin.comics.edit', $comic) }}" class="btn btn-sm btn-warning me-2">
                                 <i class="fas fa-edit"></i> Sửa
                             </a>
-                            <form action="{{ route('admin.comics.destroy', $comic) }}" method="POST" class="d-inline">
+                            <form action="{{ route('admin.comics.destroy', $comic) }}" method="POST" class="d-inline" onsubmit="return confirmDelete();">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
+                                <button type="submit" class="btn btn-sm btn-danger">
                                     <i class="fas fa-trash"></i> Xóa
                                 </button>
                             </form>
@@ -49,3 +61,9 @@
     </div>
 </div>
 @endsection
+
+<script>
+    function confirmDelete() {
+        return confirm('Bạn có chắc chắn muốn xóa không?');
+    }
+</script>

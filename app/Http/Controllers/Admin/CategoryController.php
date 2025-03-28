@@ -55,8 +55,19 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        $category->delete();
-        return redirect()->route('admin.categories.index')
-            ->with('success', 'Danh mục đã được xóa thành công.');
+        // Kiểm tra xem có sản phẩm nào thuộc danh mục này không
+        if ($category->comics()->count() > 0) {
+            return redirect()->route('admin.categories.index')
+                ->with('error', 'Không thể xóa danh mục vì vẫn còn sản phẩm thuộc danh mục này.');
+        }
+
+        try {
+            $category->delete();
+            return redirect()->route('admin.categories.index')
+                ->with('success', 'Danh mục đã được xóa thành công.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.categories.index')
+                ->with('error', 'Có lỗi xảy ra khi xóa danh mục: ' . $e->getMessage());
+        }
     }
 }
