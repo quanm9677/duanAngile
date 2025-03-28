@@ -31,20 +31,30 @@ class ComicController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            // Xóa dòng này nếu không cần tác giả
-            // 'author_id' => 'nullable|exists:authors,id',
             'category_id' => 'nullable|exists:categories,id',
             'description' => 'nullable|string',
             'publication_date' => 'nullable|date',
-            'price' => 'nullable|numeric',
+            'price' => 'nullable|numeric|lt:original_price',
             'original_price' => 'required|numeric',
-            'stock_quantity' => 'nullable|integer',
-            'image' => 'nullable|string',
+            'stock_quantity' => 'nullable|integer|min:1',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Tạo sản phẩm mới
-        Comic::create($request->all());
-        return redirect()->route('admin.comics.index')->with('success', 'Sản phẩm đã được tạo thành công.');
+        try {
+            $data = $request->all();
+
+            // Xử lý ảnh
+            if ($request->hasFile('image')) {
+                $imageName = time() . '.' . $request->image->extension();
+                $request->image->move(public_path('images'), $imageName);
+                $data['image'] = $imageName; // Lưu tên file ảnh vào mảng dữ liệu
+            }
+
+            Comic::create($data);
+            return redirect()->route('admin.comics.index')->with('success', 'Sản phẩm đã được tạo thành công.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.comics.index')->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
     }
 
     // Hiển thị chi tiết sản phẩm
@@ -67,20 +77,30 @@ class ComicController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            // Xóa dòng này nếu không cần tác giả
-            // 'author_id' => 'nullable|exists:authors,id',
             'category_id' => 'nullable|exists:categories,id',
             'description' => 'nullable|string',
             'publication_date' => 'nullable|date',
-            'price' => 'nullable|numeric',
+            'price' => 'nullable|numeric|lt:original_price',
             'original_price' => 'required|numeric',
-            'stock_quantity' => 'nullable|integer',
-            'image' => 'nullable|string',
+            'stock_quantity' => 'nullable|integer|min:1',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Cập nhật sản phẩm
-        $comic->update($request->all());
-        return redirect()->route('admin.comics.index')->with('success', 'Sản phẩm đã được cập nhật thành công.');
+        try {
+            $data = $request->all();
+
+            // Xử lý ảnh
+            if ($request->hasFile('image')) {
+                $imageName = time() . '.' . $request->image->extension();
+                $request->image->move(public_path('images'), $imageName);
+                $data['image'] = $imageName; // Lưu tên file ảnh vào mảng dữ liệu
+            }
+
+            $comic->update($data);
+            return redirect()->route('admin.comics.index')->with('success', 'Sản phẩm đã được cập nhật thành công.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.comics.index')->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
     }
 
     // Xóa sản phẩm

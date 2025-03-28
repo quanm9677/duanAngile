@@ -14,7 +14,7 @@
             <select class="form-select" id="category_id" name="category_id">
                 <option value="">Chọn Danh Mục</option>
                 @foreach($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -39,8 +39,8 @@
             <input type="number" class="form-control" id="stock_quantity" name="stock_quantity">
         </div>
         <div class="mb-3">
-            <label for="image" class="form-label">Hình Ảnh</label>
-            <input type="text" class="form-control" id="image" name="image">
+            <label for="image" class="form-label">Tải ảnh lên</label>
+            <input type="file" class="form-control" id="image" name="image" accept="image/*">
         </div>
         <button type="submit" class="btn btn-primary">Thêm Sản Phẩm</button>
     </form>

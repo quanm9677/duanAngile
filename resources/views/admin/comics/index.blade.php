@@ -17,6 +17,8 @@
                         <th>Tiêu Đề</th>
                         <th>Danh Mục</th>
                         <th>Giá</th>
+                        <th>Số Lượng</th>
+                        <th>Ảnh</th>
                         <th width="280">Hành động</th>
                     </tr>
                 </thead>
@@ -26,6 +28,14 @@
                         <td><a href="{{ route('admin.comics.show', $comic) }}">{{ $comic->title }}</a></td>
                         <td>{{ $comic->category->name ?? 'N/A' }}</td>
                         <td>{{ $comic->price }}</td>
+                        <td>{{ $comic->stock_quantity }}</td>
+                        <td>
+                            @if($comic->image && file_exists(public_path('images/' . $comic->image)))
+                                <img src="{{ asset('images/' . $comic->image) }}" alt="{{ $comic->title }}" style="width: 100px; height: auto;">
+                            @else
+                                <span>Không có ảnh</span>
+                            @endif
+                        </td>
                         <td>
                             <a href="{{ route('admin.comics.show', $comic) }}" class="btn btn-sm btn-info me-2">
                                 <i class="fas fa-eye"></i> Xem
