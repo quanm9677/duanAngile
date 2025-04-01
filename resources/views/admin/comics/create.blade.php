@@ -1,8 +1,8 @@
 @extends('admin.layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>Thêm Sản Phẩm</h1>
+<div class="container py-4">
+    <h1 class="h3">Thêm Sản Phẩm</h1>
     <form action="{{ route('admin.comics.store') }}" method="POST">
         @csrf
         <div class="mb-3">
@@ -14,7 +14,7 @@
             <select class="form-select" id="category_id" name="category_id">
                 <option value="">Chọn Danh Mục</option>
                 @foreach($categories as $category)
-                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -39,10 +39,22 @@
             <input type="number" class="form-control" id="stock_quantity" name="stock_quantity">
         </div>
         <div class="mb-3">
-            <label for="image" class="form-label">Tải ảnh lên</label>
-            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+            <label for="image" class="form-label">Hình Ảnh</label>
+            <input type="text" class="form-control" id="image" name="image">
         </div>
-        <button type="submit" class="btn btn-primary">Thêm Sản Phẩm</button>
-    </form>
+        
+            <button type="submit" class="btn btn-primary">Thêm Sản Phẩm</button>
+        </form>
 </div>
+
+<script>
+    function validateForm() {
+        var title = document.getElementById('title').value;
+        if (title.trim() === '') {
+            alert('Vui lòng nhập tên sản phẩm.');
+            return false;
+        }
+        return true;
+    }
+</script>
 @endsection
