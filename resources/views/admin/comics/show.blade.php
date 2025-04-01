@@ -10,8 +10,15 @@
             <p class="card-text"><strong>Mô Tả:</strong> {{ $comic->description }}</p>
             <p class="card-text"><strong>Ngày Xuất Bản:</strong> {{ $comic->publication_date }}</p>
             <p class="card-text"><strong>Giá:</strong> {{ $comic->price }}</p>
+            <p class="card-text"><strong>Giá Gốc:</strong> {{ $comic->original_price }}</p>
             <p class="card-text"><strong>Số Lượng Tồn Kho:</strong> {{ $comic->stock_quantity }}</p>
-            <img src="{{ asset($comic->image) }}" alt="{{ $comic->title }}" class="img-fluid">
+            {{-- <td>
+                @if($comic->image && file_exists(public_path('images/' . $comic->image)))
+                    <img src="{{ asset('images/' . $comic->image) }}" alt="{{ $comic->title }}" style="width: 100px; height: auto;">
+                @else
+                    <span>Không có ảnh</span>
+                @endif
+            </td>  --}}
         </div>
     </div>
     <a href="{{ route('admin.comics.index') }}" class="btn btn-secondary mt-3">Quay lại</a>
