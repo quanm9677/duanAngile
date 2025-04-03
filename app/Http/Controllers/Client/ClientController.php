@@ -18,8 +18,18 @@ class ClientController extends Controller
 
     public function show($id)
     {
-        $comic = Comic::findOrFail($id); // Tìm sản phẩm theo ID
-        return view('client.show', compact('comic')); // Trả về view với sản phẩm chi tiết
+        // Tìm sản phẩm theo ID
+        $comic = Comic::findOrFail($id);
+        
+        // Tăng số lần click
+        $comic->increment('click_count'); // Tăng click_count
+        
+        // Đánh dấu sản phẩm là được xem
+        $comic->is_featured = true; // Đánh dấu là sản phẩm nổi bật
+        $comic->save(); // Lưu thay đổi vào cơ sở dữ liệu
+        
+        // Trả về view chi tiết sản phẩm
+        return view('client.show', compact('comic'));
     }
 
     // public function dashboard()
