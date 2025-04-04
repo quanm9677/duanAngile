@@ -27,20 +27,15 @@
         <!-- Bộ lọc sản phẩm Start -->
         <div class="col-12 mb-4">
             <h5 class="font-weight-semi-bold mb-4">Bộ lọc sản phẩm</h5>
-            <form method="GET" action="{{ route('client.comics.index') }}">
-                <input type="hidden" name="act" value="search">
-                <form method="GET" action="{{ route('client.comics.search') }}">
-                    <input type="text" name="query" id="search" class="form-control" placeholder="Tìm kiếm sản phẩm" value="{{ request('query') }}">
-                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                </form>
+            <form method="GET" action="{{ route('client.index') }}">
                 <div class="border-bottom mb-4 pb-4">
                     <h6 class="font-weight-semi-bold mb-3">Danh mục</h6>
                     <select name="category_id" class="form-control">
                         <option value="">Tất cả danh mục</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                {{ $category->name }}
-                            </option>
+                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
@@ -59,6 +54,7 @@
                     <button type="submit" class="btn btn-primary btn-block">
                         <i class="fa fa-search mr-2"></i>Lọc sản phẩm
                     </button>
+                    <a href="{{ route('client.index') }}" class="btn btn-secondary btn-block mt-2">Reset</a> <!-- Nút Reset -->
                 </div>
             </form>
         </div>
@@ -68,27 +64,31 @@
         <div class="container-fluid pt-5">
             <h1 class="text-center">Sản phẩm bán chạy</h1>
             <div class="row pb-3">
-                <div class="d-flex justify-content-between"> <!-- Thay đổi ở đây -->
-                    @foreach($comics->when(request('category'), function ($query) {
-                        return $query->where('category_id', request('category'));
-                    })->sortByDesc('click_count') as $comic)
-                    <div class="col-lg-2 col-md-4 col-sm-6 pb-1"> <!-- Thay đổi kích thước cột -->
-                        <div class="card product-item border-0 mb-4">
-                            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                                <img class="img-fluid w-100" src="{{ asset('images/' . $comic->image) }}" alt="{{ $comic->title }}">
-                            </div>
-                            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3" style="height: 100px;">
-                                <h6 class="text-truncate mb-3">{{ $comic->title }}</h6>
-                                <div class="d-flex justify-content-center">
-                                    <h6 class="text-danger">{{ number_format($comic->price, 0, ',', '.') }}đ</h6>
+                <div class="d-flex justify-content-between"> <!-- Hiển thị sản phẩm -->
+                    @if($comics->isEmpty()) <!-- Kiểm tra nếu không có sản phẩm -->
+                        <div class="alert alert-warning w-100 text-center">
+                            Không có sản phẩm nào được tìm thấy.
+                        </div>
+                    @else
+                        @foreach($comics as $comic) <!-- Hiển thị các sản phẩm đã lọc -->
+                            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                                <div class="card product-item border-0 mb-4">
+                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                        <img class="img-fluid w-100" src="{{ asset('images/' . $comic->image) }}" alt="{{ $comic->title }}">
+                                    </div>
+                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3" style="height: 100px;">
+                                        <h6 class="text-truncate mb-3">{{ $comic->title }}</h6>
+                                        <div class="d-flex justify-content-center">
+                                            <h6 class="text-danger">{{ number_format($comic->price, 0, ',', '.') }}đ</h6>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-center bg-light border">
+                                        <a href="{{ route('client.show', $comic->id) }}" class="btn btn-sm text-dark p-0">Xem chi tiết</a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="card-footer d-flex justify-content-center bg-light border">
-                                <a href="{{ route('client.show', $comic->id) }}" class="btn btn-sm text-dark p-0">Xem chi tiết</a>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
+                        @endforeach
+                    @endif
                 </div> <!-- Kết thúc d-flex -->
             </div>
         </div>
@@ -112,21 +112,27 @@
         <!-- Product List -->
         <div class="product-container">
             <div class="d-flex product-list">
-                @foreach($comics as $comic)
-                <div class="product-item">
-                    <div class="card h-100">
-                        <img src="{{ asset('images/' . $comic->image) }}" class="card-img-top" alt="{{ $comic->title }}">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">{{ $comic->title }}</h5>
-                            <p class="card-text">{{ Str::limit($comic->description, 50) }}</p>
-                            <p class="card-text"><strong>Giá: {{ number_format($comic->price, 0, ',', '.') }} VNĐ</strong></p>
-                        </div>
-                        <div class="card-footer d-flex justify-content-center bg-light border">
-                            <a href="{{ route('client.show', $comic->id) }}" class="btn btn-sm text-dark p-0">Xem chi tiết</a>
+                @if($comics->isEmpty()) <!-- Kiểm tra nếu không có sản phẩm -->
+                    <div class="alert alert-warning w-100 text-center">
+                        Không có sản phẩm nào được tìm thấy.
+                    </div>
+                @else
+                    @foreach($comics as $comic)
+                    <div class="product-item">
+                        <div class="card h-100">
+                            <img src="{{ asset('images/' . $comic->image) }}" class="card-img-top" alt="{{ $comic->title }}">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{{ $comic->title }}</h5>
+                                <p class="card-text">{{ Str::limit($comic->description, 50) }}</p>
+                                <p class="card-text"><strong>Giá: {{ number_format($comic->price, 0, ',', '.') }} VNĐ</strong></p>
+                            </div>
+                            <div class="card-footer d-flex justify-content-center bg-light border">
+                                <a href="{{ route('client.show', $comic->id) }}" class="btn btn-sm text-dark p-0">Xem chi tiết</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                @endforeach
+                    @endforeach
+                @endif
             </div>
         </div>
     </div>
@@ -134,26 +140,28 @@
 
 <!-- CSS -->
 <style>
-    .product-container {
+  .product-container {
         width: 100%;
         overflow: hidden;
         position: relative;
-        padding: 10px 40px;
+        padding: 10px 20px; /* Adjusted left-right padding */
     }
 
     .product-list {
         display: flex;
         transition: transform 0.5s ease-in-out;
+        margin-left: -20px; /* To compensate for the padding adjustment on the left */
+        margin-right: -20px; /* To compensate for the padding adjustment on the right */
     }
 
     .product-item {
-        flex: 0 0 200px;
+        flex: 0 0 220px;
         margin: 0 10px;
         text-align: center;
     }
 
     .product-item .card {
-        width: 200px;
+        width: 100%;
         height: 320px;
         overflow: hidden;
     }
@@ -212,43 +220,61 @@
 <!-- JavaScript -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const searchInput = document.getElementById('search');
-        const suggestionsList = document.getElementById('suggestions');
+        const prevButton = document.getElementById('prev');
+        const nextButton = document.getElementById('next');
+        const productList = document.querySelector('.product-list');
+        const productItems = document.querySelectorAll('.product-item');
+        const itemsPerView = Math.floor(document.querySelector('.product-container').offsetWidth / 220); // Number of items to display based on container width
+        let currentIndex = 0; // Index of the first visible product
 
-        searchInput.addEventListener('input', function() {
-            const query = this.value;
+        // Calculate the total width of the product list
+        const totalWidth = productItems.length * 220; // Assuming each item is 220px wide
+        const maxScrollWidth = totalWidth - document.querySelector('.product-container').offsetWidth;
 
-            if (query.length > 0) {
-                fetch(`/client/comic/search?query=${query}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        suggestionsList.innerHTML = '';
-                        if (data.length > 0) {
-                            suggestionsList.style.display = 'block';
-                            data.forEach(product => {
-                                const item = document.createElement('div');
-                                item.className = 'suggestion-item';
-                                item.textContent = product.title;
-                                item.onclick = function() {
-                                    searchInput.value = product.title;
-                                    suggestionsList.style.display = 'none';
-                                };
-                                suggestionsList.appendChild(item);
-                            });
-                        } else {
-                            suggestionsList.style.display = 'none';
-                        }
-                    });
+        // Function to move the product list left or right
+        function moveCarousel(direction) {
+            currentIndex += direction;
+
+            if (currentIndex < 0) {
+                currentIndex = 0; // Prevent scrolling past the first item
+            } else if (currentIndex > productItems.length - itemsPerView) {
+                currentIndex = productItems.length - itemsPerView; // Prevent scrolling past the last item
+            }
+
+            // Apply the transform property to move the carousel
+            const translateX = -currentIndex * 220; // Shift left by the width of one product item
+            productList.style.transform = `translateX(${translateX}px)`;
+
+            // Update arrow visibility
+            updateArrowVisibility();
+        }
+
+        // Add event listeners to the prev and next buttons
+        prevButton.addEventListener('click', function() {
+            moveCarousel(-1); // Move to the previous set of products
+        });
+
+        nextButton.addEventListener('click', function() {
+            moveCarousel(1); // Move to the next set of products
+        });
+
+        // Hide the prev button if we're at the start, and the next button if we're at the end
+        function updateArrowVisibility() {
+            if (currentIndex === 0) {
+                prevButton.classList.add('hidden'); // Hide the "previous" button at the start
             } else {
-                suggestionsList.style.display = 'none';
+                prevButton.classList.remove('hidden'); // Show the "previous" button if not at the start
             }
-        });
 
-        document.addEventListener('click', function(e) {
-            if (!suggestionsList.contains(e.target) && e.target !== searchInput) {
-                suggestionsList.style.display = 'none';
+            if (currentIndex >= productItems.length - itemsPerView) {
+                nextButton.classList.add('hidden'); // Hide the "next" button if at the end
+            } else {
+                nextButton.classList.remove('hidden'); // Show the "next" button if not at the end
             }
-        });
+        }
+
+        // Initialize arrow visibility
+        updateArrowVisibility();
     });
 </script>
 

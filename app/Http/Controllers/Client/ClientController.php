@@ -9,20 +9,29 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    public function index(Request $request)
-    {
-        $categories = Category::all(); // Lấy danh sách danh mục từ database
-        $comics = Comic::all(); // Lấy danh sách sản phẩm (hoặc theo cách bạn đang lấy)
-        // $query = Comic::query();
+   // ... existing code ...
+public function index(Request $request)
+{
+    $categories = Category::all(); // Lấy danh sách danh mục từ database
+    $comics = Comic::query(); // Khởi tạo truy vấn cho sản phẩm
 
-        // // Kiểm tra nếu có từ khóa tìm kiếm
-        // if ($request->has('search') && $request->input('search') != '') {
-        //     $search = $request->input('search');
-        //     $query->where('title', 'LIKE', "%{$search}%"); // Tìm kiếm theo tiêu đề sản phẩm
-        // }
-
-        return view('client.index', compact('comics', 'categories')); // Trả về view với danh sách sản phẩm
+    // Lọc theo danh mục nếu có
+    if ($request->filled('category_id')) {
+        $comics->where('category_id', $request->category_id);
     }
+
+    // Lọc theo khoảng giá nếu có
+    if ($request->filled('price_range')) {
+        $priceRange = explode('-', $request->price_range);
+        $comics->whereBetween('price', [$priceRange[0], $priceRange[1]]);
+    }
+
+    // Sắp xếp theo click_count từ cao đến thấp
+    $comics = $comics->orderBy('click_count', 'desc')->get(); // Lấy sản phẩm đã lọc và sắp xếp
+
+    return view('client.index', compact('comics', 'categories'));
+}
+// ... existing code ...
 
     public function show($id)
     {
