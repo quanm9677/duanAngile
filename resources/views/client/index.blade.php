@@ -29,6 +29,10 @@
             <h5 class="font-weight-semi-bold mb-4">Bộ lọc sản phẩm</h5>
             <form method="GET" action="{{ route('client.index') }}">
                 <div class="border-bottom mb-4 pb-4">
+                    <h6 class="font-weight-semi-bold mb-3">Tìm kiếm sản phẩm</h6>
+                    <input type="text" name="query" class="form-control" placeholder="Nhập tên sản phẩm" value="{{ request('query') }}">
+                </div>
+                <div class="border-bottom mb-4 pb-4">
                     <h6 class="font-weight-semi-bold mb-3">Danh mục</h6>
                     <select name="category_id" class="form-control">
                         <option value="">Tất cả danh mục</option>
@@ -52,7 +56,7 @@
                 </div>
                 <div class="mb-4">
                     <button type="submit" class="btn btn-primary btn-block">
-                        <i class="fa fa-search mr-2"></i>Lọc sản phẩm
+                        <i class="fa fa-search mr-2"></i>Tìm kiếm
                     </button>
                     <a href="{{ route('client.index') }}" class="btn btn-secondary btn-block mt-2">Reset</a> <!-- Nút Reset -->
                 </div>
@@ -97,12 +101,14 @@
 </div>
 <!-- Shop End -->
 
+
+
 <!-- Product List Full Width -->
 <div class="container-fluid pt-5">
     <h1 class="text-center">Danh sách Sản phẩm</h1>
     <div class="position-relative">
         <!-- Navigation Arrows -->
-        <button id="prev" class="btn btn-secondary position-absolute prev-arrow">
+        <button id="prev" class="btn btn-secondary po sition-absolute prev-arrow">
             <i class="fas fa-chevron-left"></i>
         </button>
         <button id="next" class="btn btn-secondary position-absolute next-arrow">
@@ -113,25 +119,25 @@
         <div class="product-container">
             <div class="d-flex product-list">
                 @if($comics->isEmpty()) <!-- Kiểm tra nếu không có sản phẩm -->
-                    <div class="alert alert-warning w-100 text-center">
-                        Không có sản phẩm nào được tìm thấy.
-                    </div>
+                <div class="alert alert-warning w-100 text-center">
+                    Không có sản phẩm nào được tìm thấy.
+                </div>
                 @else
-                    @foreach($comics as $comic)
-                    <div class="product-item">
-                        <div class="card h-100">
-                            <img src="{{ asset('images/' . $comic->image) }}" class="card-img-top" alt="{{ $comic->title }}">
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">{{ $comic->title }}</h5>
-                                <p class="card-text">{{ Str::limit($comic->description, 50) }}</p>
-                                <p class="card-text"><strong>Giá: {{ number_format($comic->price, 0, ',', '.') }} VNĐ</strong></p>
-                            </div>
-                            <div class="card-footer d-flex justify-content-center bg-light border">
-                                <a href="{{ route('client.show', $comic->id) }}" class="btn btn-sm text-dark p-0">Xem chi tiết</a>
-                            </div>
+                @foreach($comics as $comic)
+                <div class="product-item">
+                    <div class="card h-100">
+                        <img src="{{ asset('images/' . $comic->image) }}" class="card-img-top" alt="{{ $comic->title }}">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ $comic->title }}</h5>
+                            <p class="card-text">{{ Str::limit($comic->description, 50) }}</p>
+                            <p class="card-text"><strong>Giá: {{ number_format($comic->price, 0, ',', '.') }} VNĐ</strong></p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-center bg-light border">
+                            <a href="{{ route('client.show', $comic->id) }}" class="btn btn-sm text-dark p-0">Xem chi tiết</a>
                         </div>
                     </div>
-                    @endforeach
+                </div>
+                @endforeach
                 @endif
             </div>
         </div>
@@ -140,18 +146,21 @@
 
 <!-- CSS -->
 <style>
-  .product-container {
+    .product-container {
         width: 100%;
         overflow: hidden;
         position: relative;
-        padding: 10px 20px; /* Adjusted left-right padding */
+        padding: 10px 20px;
+        /* Adjusted left-right padding */
     }
 
     .product-list {
         display: flex;
         transition: transform 0.5s ease-in-out;
-        margin-left: -20px; /* To compensate for the padding adjustment on the left */
-        margin-right: -20px; /* To compensate for the padding adjustment on the right */
+        margin-left: -20px;
+        /* To compensate for the padding adjustment on the left */
+        margin-right: -20px;
+        /* To compensate for the padding adjustment on the right */
     }
 
     .product-item {
