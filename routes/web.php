@@ -39,10 +39,13 @@ Route::get('/client', [ClientController::class, 'index'])->name('client.index');
 Route::get('/client/categories', [CategoryController::class, 'index'])->name('client.categories.index');
 
 // Route cho danh sách sản phẩm
-Route::get('/client/products', [ClientController::class, 'index'])->name('client.products.index');
+Route::get('/client/comics', [ClientController::class, 'index'])->name('client.comics.index');
 
-// Thêm các route khác cho client nếu cần
-Route::get('/client/comic/{id}', [ClientController::class, 'show'])->name('client.show');
+// Route cho trang chi tiết sản phẩm
+Route::get('/client/comics/{id}', [ClientController::class, 'show'])->name('client.show');
+
+// Thêm route cho tìm kiếm sản phẩm
+Route::get('/client/comics/search', [ClientController::class, 'search'])->name('client.comics.search');
 
 // Thêm route cho dashboard của client
 Route::get('/client/dashboard', [ClientController::class, 'dashboard'])->name('client.dashboard');
