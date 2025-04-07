@@ -16,20 +16,26 @@ public function index(Request $request)
 
     // Khởi tạo truy vấn cho sản phẩm
     $comics = Comic::query();
+    $bestSellers = Comic::query(); // Truy vấn riêng cho sản phẩm bán chạy
 
     // Lọc theo danh mục nếu có
     if ($request->filled('category_id')) {
         $comics->where('category_id', $request->category_id);
+        $bestSellers->where('category_id', $request->category_id);
     }
 
     // Lọc theo khoảng giá nếu có
     if ($request->filled('price_range')) {
         $priceRange = explode('-', $request->price_range);
         $comics->whereBetween('price', [$priceRange[0], $priceRange[1]]);
+        $bestSellers->whereBetween('price', [$priceRange[0], $priceRange[1]]);
     }
 
-    // Lấy tất cả sản phẩm và sắp xếp theo click_count giảm dần
-    $comics = $comics->orderBy('click_count', 'desc')->get();
+    // Lấy tất cả sản phẩm cho danh sách chính
+    $comics = $comics->get();
+
+    // Lấy 5 sản phẩm có click_count cao nhất cho phần bán chạy
+    $bestSellers = $bestSellers->orderBy('click_count', 'desc')->take(5)->get();
 
     // Kiểm tra nếu có từ khóa tìm kiếm
     if ($request->filled('query')) {
@@ -41,11 +47,11 @@ public function index(Request $request)
             return redirect()->route('client.show', $comic->id);
         } else {
             // Nếu không tìm thấy sản phẩm, có thể trả về thông báo
-            return redirect()->route('client.index')->with('error', 'Không tìm thấy sản phẩm nào.')->with(compact('categories', 'comics'));
+            return redirect()->route('client.index')->with('error', 'Không tìm thấy sản phẩm nào.')->with(compact('categories', 'comics', 'bestSellers'));
         }
     }
 
-    return view('client.index', compact('comics', 'categories')); // Truyền danh sách sản phẩm và danh mục vào view
+    return view('client.index', compact('comics', 'categories', 'bestSellers')); // Truyền danh sách sản phẩm, danh mục và sản phẩm bán chạy vào view
 }
 // ... existing code ...
 

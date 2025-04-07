@@ -67,36 +67,36 @@
         <!-- Shop Product Start -->
         <div class="container-fluid pt-5">
             <h1 class="text-center">Sản phẩm bán chạy</h1>
-            <div class="row pb-3">
-                <div class="d-flex justify-content-between"> <!-- Hiển thị sản phẩm -->
-                    @if($comics->isEmpty()) <!-- Kiểm tra nếu không có sản phẩm -->
-                        <div class="alert alert-warning w-100 text-center">
-                            Không có sản phẩm nào được tìm thấy.
-                        </div>
-                    @else
-                        @foreach($comics as $comic) <!-- Hiển thị các sản phẩm đã lọc -->
-                            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                                <div class="card product-item border-0 mb-4">
-                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                                        <img class="img-fluid w-100" src="{{ asset('images/' . $comic->image) }}" alt="{{ $comic->title }}">
-                                    </div>
-                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3" style="height: 100px;">
-                                        <h6 class="text-truncate mb-3">{{ $comic->title }}</h6>
-                                        <div class="d-flex justify-content-center">
-                                            <h6 class="text-danger">{{ number_format($comic->price, 0, ',', '.') }}đ</h6>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer d-flex justify-content-center bg-light border">
-                                        <a href="{{ route('client.show', $comic->id) }}" class="btn btn-sm text-dark p-0">Xem chi tiết</a>
-                                    </div>
+            <div class="row px-xl-5">
+                @if($bestSellers->isEmpty())
+                <div class="col-12">
+                    <div class="alert alert-warning text-center">
+                        Không có sản phẩm bán chạy nào.
+                    </div>
+                </div>
+                @else
+                    @foreach($bestSellers as $comic)
+                    <div class="col-custom-5"> <!-- Custom column for 5 items per row -->
+                        <div class="card product-item border-0 mb-4">
+                            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                <img class="img-fluid w-100" src="{{ asset('images/' . $comic->image) }}" alt="{{ $comic->title }}" style="height: 200px; object-fit: cover;">
+                            </div>
+                            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3" style="height: 100px;">
+                                <h6 class="text-truncate mb-3">{{ $comic->title }}</h6>
+                                <div class="d-flex justify-content-center">
+                                    <h6 class="text-danger">{{ number_format($comic->price, 0, ',', '.') }}đ</h6>
                                 </div>
                             </div>
-                        @endforeach
-                    @endif
-                </div> <!-- Kết thúc d-flex -->
+                            <div class="card-footer d-flex justify-content-center bg-light border">
+                                <a href="{{ route('client.show', $comic->id) }}" class="btn btn-sm text-dark p-0">Xem chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                @endif
             </div>
         </div>
-        <!-- Shop Product End -->
+        <!-- Danh sách sản phẩm -->
     </div>
 </div>
 <!-- Shop End -->
@@ -223,6 +223,73 @@
 
     .alert {
         margin: 20px 0;
+    }
+
+    .product-item {
+        transition: all 0.3s;
+    }
+    
+    .product-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .product-img {
+        overflow: hidden;
+    }
+
+    .product-img img {
+        transition: transform 0.3s;
+    }
+
+    .product-img:hover img {
+        transform: scale(1.1);
+    }
+
+    .text-truncate {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        height: 40px;
+    }
+
+    /* Custom column width for exactly 5 items per row */
+    .col-custom-5 {
+        flex: 0 0 20%;
+        max-width: 20%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-bottom: 30px;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 1200px) {
+        .col-custom-5 {
+            flex: 0 0 25%;
+            max-width: 25%;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .col-custom-5 {
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .col-custom-5 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .col-custom-5 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
     }
 </style>
 
