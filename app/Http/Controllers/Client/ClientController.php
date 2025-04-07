@@ -12,62 +12,53 @@ class ClientController extends Controller
    // ... existing code ...
 public function index(Request $request)
 {
-    $categories = Category::all(); // Lấy danh sách danh mục
+    $categories = Category::withCount('comics')->get();
 
-    // Khởi tạo truy vấn cho sản phẩm
-    $comics = Comic::query();
-    $bestSellers = Comic::query(); // Truy vấn riêng cho sản phẩm bán chạy
+    $comics = Comic::with('category')
+        ->when($request->filled('category_id'), function ($query) use ($request) {
+            return $query->where('category_id', $request->category_id);
+        })
+        ->when($request->filled('price_range'), function ($query) use ($request) {
+            $priceRange = explode('-', $request->price_range);
+            return $query->whereBetween('price', [$priceRange[0], $priceRange[1]]);
+        })
+        ->get();
 
-    // Lọc theo danh mục nếu có
-    if ($request->filled('category_id')) {
-        $comics->where('category_id', $request->category_id);
-        $bestSellers->where('category_id', $request->category_id);
-    }
+    $bestSellers = Comic::with('category')
+        ->when($request->filled('category_id'), function ($query) use ($request) {
+            return $query->where('category_id', $request->category_id);
+        })
+        ->when($request->filled('price_range'), function ($query) use ($request) {
+            $priceRange = explode('-', $request->price_range);
+            return $query->whereBetween('price', [$priceRange[0], $priceRange[1]]);
+        })
+        ->orderBy('click_count', 'desc')
+        ->take(5)
+        ->get();
 
-    // Lọc theo khoảng giá nếu có
-    if ($request->filled('price_range')) {
-        $priceRange = explode('-', $request->price_range);
-        $comics->whereBetween('price', [$priceRange[0], $priceRange[1]]);
-        $bestSellers->whereBetween('price', [$priceRange[0], $priceRange[1]]);
-    }
-
-    // Lấy tất cả sản phẩm cho danh sách chính
-    $comics = $comics->get();
-
-    // Lấy 5 sản phẩm có click_count cao nhất cho phần bán chạy
-    $bestSellers = $bestSellers->orderBy('click_count', 'desc')->take(5)->get();
-
-    // Kiểm tra nếu có từ khóa tìm kiếm
     if ($request->filled('query')) {
-        // Tìm sản phẩm đầu tiên khớp với từ khóa
         $comic = Comic::where('title', 'like', '%' . $request->input('query') . '%')->first();
-
-        // Nếu tìm thấy sản phẩm, chuyển hướng đến trang chi tiết
+        
         if ($comic) {
             return redirect()->route('client.show', $comic->id);
-        } else {
-            // Nếu không tìm thấy sản phẩm, có thể trả về thông báo
-            return redirect()->route('client.index')->with('error', 'Không tìm thấy sản phẩm nào.')->with(compact('categories', 'comics', 'bestSellers'));
         }
+        
+        return redirect()->route('client.index')
+            ->with('error', 'Không tìm thấy sản phẩm nào.')
+            ->with(compact('categories', 'comics', 'bestSellers'));
     }
 
-    return view('client.index', compact('comics', 'categories', 'bestSellers')); // Truyền danh sách sản phẩm, danh mục và sản phẩm bán chạy vào view
+    return view('client.index', compact('comics', 'categories', 'bestSellers'));
 }
 // ... existing code ...
 
     public function show($id)
     {
-        // Tìm sản phẩm theo ID
-        $comic = Comic::findOrFail($id);
+        $comic = Comic::with('category')->findOrFail($id);
+        
+        $comic->increment('click_count');
+        $comic->update(['is_featured' => true]);
 
-        // Tăng số lần click
-        $comic->increment('click_count'); // Tăng click_count
-
-        // Đánh dấu sản phẩm là được xem
-        $comic->is_featured = true; // Đánh dấu là sản phẩm nổi bật
-        $comic->save(); // Lưu thay đổi vào cơ sở dữ liệu
-
-        // Trả về view chi tiết sản phẩm
         return view('client.show', compact('comic'));
     }
 

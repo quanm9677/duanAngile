@@ -10,7 +10,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::withCount('comics')->get();
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -33,6 +33,7 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
+        $category->load('comics');
         return view('admin.categories.show', compact('category'));
     }
 
@@ -55,19 +56,13 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        // Kiểm tra xem có sản phẩm nào thuộc danh mục này không
-        if ($category->comics()->count() > 0) {
+        if ($category->comics()->exists()) {
             return redirect()->route('admin.categories.index')
                 ->with('error', 'Không thể xóa danh mục vì vẫn còn sản phẩm thuộc danh mục này.');
         }
 
-        try {
-            $category->delete();
-            return redirect()->route('admin.categories.index')
-                ->with('success', 'Danh mục đã được xóa thành công.');
-        } catch (\Exception $e) {
-            return redirect()->route('admin.categories.index')
-                ->with('error', 'Có lỗi xảy ra khi xóa danh mục: ' . $e->getMessage());
-        }
+        $category->delete();
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Danh mục đã được xóa thành công.');
     }
 }
