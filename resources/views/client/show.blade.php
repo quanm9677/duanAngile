@@ -23,7 +23,7 @@
                             <button class="btn btn-outline-secondary" id="increase">+</button>
                         </div>
                         <div class="mt-3">
-                            <a href="{{ route('client.index') }}" class="btn btn-secondary">Quay lại danh sách</a>
+                            <a href="{{ route('client.comics.index') }}" class="btn btn-secondary">Quay lại danh sách</a>
                             <!-- <a href="#" class="btn btn-primary">Thêm vào giỏ hàng</a> -->
                         </div>
                     </div>

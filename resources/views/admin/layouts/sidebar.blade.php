@@ -65,6 +65,16 @@
                             <span>Quản lí tài khoản</span>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fa fa-sign-out"></i>
+                            <span>Đăng xuất</span>
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </li>
                 </ul>
             </div>
         </div>

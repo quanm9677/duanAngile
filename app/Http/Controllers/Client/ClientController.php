@@ -15,9 +15,7 @@ public function index(Request $request)
     $categories = Category::withCount('comics')->get();
 
     $comics = Comic::with('category')
-        ->when($request->filled('category_id'), function ($query) use ($request) {
-            return $query->where('category_id', $request->category_id);
-        })
+        ->when($request->filled('category_id'), fn($query) => $query->where('category_id', $request->category_id))
         ->when($request->filled('price_range'), function ($query) use ($request) {
             $priceRange = explode('-', $request->price_range);
             return $query->whereBetween('price', [$priceRange[0], $priceRange[1]]);

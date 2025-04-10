@@ -10,16 +10,40 @@
 
 <!-- Page Header Start -->
 <div class="container-fluid bg-secondary mb-5">
-    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-        <h1 class="font-weight-semi-bold text-uppercase mb-3">Cửa Hàng</h1>
-        <div class="d-inline-flex">
-            <p class="m-0"><a href="{{ route('client.dashboard') }}">Trang chủ</a></p>
-            <p class="m-0 px-2">-</p>
-            <p class="m-0">Sản phẩm</p>
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 500px;">
+       <div id="banner" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{{ asset('images/1744201425.jpg') }}" class="d-block w-100 banner-image" alt="Banner 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ asset('images/1744202307.jpg') }}" class="d-block w-100 banner-image" alt="Banner 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ asset('images/1744202177.jpg') }}" class="d-block w-100 banner-image" alt="Banner 3">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ asset('images/1744202115.jpg') }}" class="d-block w-100 banner-image" alt="Banner 4">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ asset('images/1744201826.jpg') }}" class="d-block w-100 banner-image" alt="Banner 5">
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#banner" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#banner" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
         </div>
     </div>
 </div>
 <!-- Page Header End -->
+
+<!-- Banner -->
+
 
 <!-- Shop Start -->
 <div class="container-fluid pt-5">
@@ -88,7 +112,7 @@
                                 </div>
                             </div>
                             <div class="card-footer d-flex justify-content-center bg-light border">
-                                <a href="{{ route('client.show', $comic->id) }}" class="btn btn-sm text-dark p-0">Xem chi tiết</a>
+                            <a href="{{ route('client.show', $comic->id) }}" class="btn btn-sm text-dark p-0">Xem chi tiết</a>
                             </div>
                         </div>
                     </div>
@@ -108,7 +132,7 @@
     <h1 class="text-center">Danh sách Sản phẩm</h1>
     <div class="position-relative">
         <!-- Navigation Arrows -->
-        <button id="prev" class="btn btn-secondary po sition-absolute prev-arrow">
+        <button id="prev" class="btn btn-secondary position-absolute prev-arrow">
             <i class="fas fa-chevron-left"></i>
         </button>
         <button id="next" class="btn btn-secondary position-absolute next-arrow">
@@ -133,7 +157,7 @@
                             <p class="card-text"><strong>Giá: {{ number_format($comic->price, 0, ',', '.') }} VNĐ</strong></p>
                         </div>
                         <div class="card-footer d-flex justify-content-center bg-light border">
-                            <a href="{{ route('client.show', $comic->id) }}" class="btn btn-sm text-dark p-0">Xem chi tiết</a>
+                        <a href="{{ route('client.show', $comic->id) }}" class="btn btn-sm text-dark p-0">Xem chi tiết</a>
                         </div>
                     </div>
                 </div>
@@ -248,7 +272,7 @@
 
     .text-truncate {
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        /* -webkit-line-clamp: 2; */
         -webkit-box-orient: vertical;
         overflow: hidden;
         height: 40px;
@@ -290,6 +314,12 @@
             flex: 0 0 100%;
             max-width: 100%;
         }
+    }
+
+    .banner-image {
+        height: 500px; /* Đặt chiều cao cho hình ảnh banner */
+        width: auto;
+        object-fit: cover; /* Đảm bảo hình ảnh không bị méo và lấp đầy không gian */
     }
 </style>
 
@@ -352,6 +382,11 @@
         // Initialize arrow visibility
         updateArrowVisibility();
     });
+
+    // Tự động chuyển đổi giữa các hình ảnh sau mỗi 5 giây
+    setInterval(function() {
+        $('#banner').carousel('next');
+    }, 5000);
 </script>
 
 @endsection

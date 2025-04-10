@@ -10,7 +10,7 @@
             <p class="card-text"><strong>Mô Tả:</strong> {{ $comic->description }}</p>
             <p class="card-text"><strong>Ngày Xuất Bản:</strong> {{ $comic->publication_date }}</p>
             <p class="card-text"><strong>Giá:</strong> {{ $comic->price }}</p>
-            <p class="card-text"><strong>Giá Gốc:</strong> {{ $comic->original_price }}</p>
+            <!-- <p class="card-text"><strong>Giá Gốc:</strong> {{ $comic->original_price }}</p> -->
             <p class="card-text"><strong>Số Lượng Tồn Kho:</strong> {{ $comic->stock_quantity }}</p>
             {{-- <td>
                 @if($comic->image && file_exists(public_path('images/' . $comic->image)))
