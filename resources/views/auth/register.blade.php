@@ -6,64 +6,50 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">{{ __('Đăng ký') }}</h4>
+                    <h4 class="mb-0">Đăng ký</h4>
                 </div>
-
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form method="POST" action="{{ route('register') }}" novalidate>
                         @csrf
+
                         <div class="mb-3">
-                            <label for="name" class="form-label">{{ __('Họ và tên') }}</label>
-                            <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                            <label for="name" class="form-label">Họ và tên</label>
+                            <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}">
                             @error('name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                <p class="text-danger mt-1 mb-0">{{ $message }}</p>
                             @enderror
                         </div>
+
                         <div class="mb-3">
-                            <label for="email" class="form-label">{{ __('Email') }}</label>
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="text" id="email" name="email" class="form-control" value="{{ old('email') }}">
                             @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                <p class="text-danger mt-1 mb-0">{{ $message }}</p>
                             @enderror
                         </div>
+
                         <div class="mb-3">
-                            <label for="password" class="form-label">{{ __('Mật khẩu') }}</label>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input type="password" id="password" name="password" class="form-control">
                             @error('password')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                                <p class="text-danger mt-1 mb-0">{{ $message }}</p>
                             @enderror
                         </div>
+
                         <div class="mb-3">
-                            <label for="password-confirm" class="form-label">{{ __('Xác nhận mật khẩu') }}</label>
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                            <label for="password_confirmation" class="form-label">Xác nhận mật khẩu</label>
+                            <input type="password" id="password_confirmation" name="password_confirmation" class="form-control">
                         </div>
-                        <div class="mb-3">
+
                         <input type="hidden" name="role" value="client">
-                        <div class="mb-3" style="display: none;">
-                            <label for="role" class="form-label">{{ __('Vai trò') }}</label>
-                            <select id="role" class="form-control @error('role') is-invalid @enderror" name="role" required>
-                                <option value="client" selected>Client</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                            @error('role')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div> 
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">{{ __('Đăng ký') }}</button>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Đăng ký</button>
                         </div>
                     </form>
+
                     <div class="mt-3 text-center">
-                        <p>Bạn đã có tài khoản? <a href="{{ route('login') }}">Hãy đăng nhập tại đây</a></p>
+                        <p>Đã có tài khoản? <a href="{{ route('login') }}">Đăng nhập tại đây</a></p>
                     </div>
                 </div>
             </div>

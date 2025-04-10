@@ -24,54 +24,34 @@
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('login') }}" novalidate>
                         @csrf
 
                         <div class="mb-3">
-                            <label for="email" class="form-label">{{ __('Email') }}</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" 
-                                       name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-                            </div>
+                            <label for="email" class="form-label">Email</label>
+                            <input id="email" type="text" name="email" class="form-control" value="{{ old('email') }}">
                             @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                                <p class="text-danger mt-1 mb-0">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="password" class="form-label">{{ __('Mật khẩu') }}</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" 
-                                       name="password" required autocomplete="current-password">
-                            </div>
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input id="password" type="password" name="password" class="form-control">
                             @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                                <p class="text-danger mt-1 mb-0">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div class="mb-3 form-check">
-                            <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                            <input class="form-check-input" type="checkbox" name="remember" id="remember">
                             <label class="form-check-label" for="remember">
-                                {{ __('Ghi nhớ đăng nhập') }}
+                                Ghi nhớ đăng nhập
                             </label>
                         </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-sign-in-alt me-2"></i>{{ __('Đăng nhập') }}
-                            </button>
-
-                            @if (Route::has('password.request'))
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    {{ __('Quên mật khẩu?') }}
-                                </a>
-                            @endif
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Đăng nhập</button>
                         </div>
                     </form>
                     <div class="mt-3 text-center">
